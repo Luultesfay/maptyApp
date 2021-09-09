@@ -27,25 +27,49 @@ if (navigator.geolocation)
       console.log(latitude, longitude);
       console.log(`https://www.google.com/maps/@${latitude},-${longitude}`); //our current location
 
-      const coords = [latitude, longitude]; // we create array cord
+      const coords = [latitude, longitude]; // we create array cord  which gives as our location
+
+      //////230. Displaying a Map Using Leaflet Library
+      //Leaflet Library is an open-source JavaScript libraryfor mobile-friendly interactive maps
+      // and in this section we will include the  Using a Hosted Version of Leaflet   we will copy from the website and will put in the head of our html file
 
       const map = L.map("map").setView(coords, 13); //we change var with const const  and     [51.505, -0.09] with coords   and also 13 is like zoomin and zoom out we will change it and we will inspect on the map
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
+      //we comment out the code below
 
-      L.marker(coords) //[51.505, -0.09] with coords
-        .addTo(map)
-        .bindPopup("A pretty CSS3 popup.<br> Easily customizable.")
-        .openPopup();
+      //L.marker(coords) //[51.505, -0.09] with coords
+      // .addTo(map)
+      // .bindPopup("A pretty CSS3 popup.<br> Easily customizable.")
+      // .openPopup();
+      ////////////231. Displaying a Map Marker
+      //So in this video we're gonna display a marker  wherever we click on the map.
+
+      map.on("click", function (mapEvent) {
+        //by using this we desplay all markers that we click
+        //console.log(mapEvent); //we will get the cliked event in that particular location
+        const { lat, lng } = mapEvent.latlng; //we destracturing      lat and lang  stands for latitude and longutude
+        //L.marker([lat, lng]).addTo(map).bindPopup("working out").openPopup(); //working out is displays with the marker
+        L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup(
+            L.popup({
+              //get this from liflet
+              maxWidth: 200,
+              minWidth: 100,
+              autoClose: false,
+              closeOnClick: false,
+              className: "running-popup",
+            })
+          )
+          .setPopupContent("working out") //this method is from lief let
+          .openPopup();
+      });
     },
     function () {
       alert("i coudnt get the location 😕");
     }
   );
-
-//////230. Displaying a Map Using Leaflet Library
-//Leaflet Library is an open-source JavaScript libraryfor mobile-friendly interactive maps
-// and in this section we will include the  Using a Hosted Version of Leaflet   we will copy from the website and will put in the head of our html file
