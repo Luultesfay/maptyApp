@@ -1,5 +1,5 @@
 "use strict";
-
+/*
 //we are creating an app called MAPTY that  shows every exerscise we did in the map and the list
 
 // prettier-ignore
@@ -100,3 +100,4 @@ inputType.addEventListener("change", function () {
   inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
   inputElevation.closest(".form__row").classList.toggle("form__row--hidden");
 });
+*/
