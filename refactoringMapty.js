@@ -16,8 +16,58 @@ const inputCadence = document.querySelector(".form__input--cadence");
 const inputDistance = document.querySelector(".form__input--distance");
 const inputElevation = document.querySelector(".form__input--elevation");
 
-//let map, mapEvent;
+///////Managing Workout Data: Creating Classes
 
+class Workout {
+  date = new Date();
+  id = (Date.now() + " ").slice(-10);
+
+  constructor(distance, duration, coords) {
+    this.distance = distance; //km
+    this.duration = duration; //min
+    this.coords = coords; //[latitude longtiude]
+  }
+}
+//create class running  and inherit from parent class Workout
+class Running extends Workout {
+  constructor(distance, duration, coords, Cadence) {
+    super(distance, duration, coords);
+    this.Cadence = Cadence;
+
+    //so we can call the calPace() method from the constructor
+    this.calcPace();
+  }
+  //create method clacPace
+  calcPace() {
+    this.pace = this.duration / this.distance; //min/km
+    return this.pace;
+  }
+}
+
+//create class Cycling and inherit from parent class Workout
+class Cycling extends Workout {
+  constructor(distance, duration, coords, elevationGain) {
+    super(distance, duration, coords);
+    this.elevationGain = elevationGain;
+    //so we can call the calcSpeed() method from the constructor
+    this.calcSpeed();
+  }
+  //create method CalcSpeed
+  calcSpeed() {
+    this.speed = this.distance / (this.duration / 60); //km/min
+    return this.speed;
+  }
+}
+
+//lets create objects now
+
+const run1 = new Running(10, 60, [37, 120], 178);
+const cycling1 = new Cycling(30, 60, [37, 120], 178);
+
+console.log(run1); //Object { date: Date Sat Sep 11 2021 08:51:40 GMT-0700 (Pacific Daylight Time), id: "375500252 ", distance: 10, duration: 60, coords: (2) […], Cadence: 178, pace: 6 }
+console.log(cycling1); //Object { date: Date Sat Sep 11 2021 08:52:15 GMT-0700 (Pacific Daylight Time), id: "375535436 ", distance: 30, duration: 60, coords: (2) […], elevationGain: 178, speed: 30 }
+
+/////////////////////////////////APP Architecture
 //lets create App class
 
 class App {
