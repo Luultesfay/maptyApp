@@ -10,11 +10,17 @@
 class workout {
   date = new Date();
   id = (Date.now() + " ").slice(-10);
+  clicks = 0;
 
   constructor(coords, distance, duration) {
     this.distance = distance; //km
     this.duration = duration; //min
     this.coords = coords; //[latitude longtiude]
+  }
+
+  click() {
+    //this is to show public Api  we can count the number of clicks
+    this.clicks++;
   }
   _setDiscription() {
     // prettier-ignore
@@ -82,6 +88,7 @@ class App {
   #map;
   #mapEvent;
   #workouts = [];
+  #zoom = 13;
   constructor() {
     this._getPosition();
 
@@ -90,6 +97,10 @@ class App {
     form.addEventListener("submit", this._newWorkOut.bind(this));
     //this willchange element in  the input  when one is displayed the other one hidden  in tis case the  cycling(cadance) and runing (elevetion gain)interchanching
     inputType.addEventListener("change", this._toggleElevationField);
+
+    //. Move  map to Marker On Click
+
+    containerWorkouts.addEventListener("click", this._popeUpMove.bind(this));
   }
 
   _getPosition() {
@@ -120,7 +131,7 @@ class App {
     //Leaflet Library is an open-source JavaScript libraryfor mobile-friendly interactive maps
     // and in this section we will include the  Using a Hosted Version of Leaflet   we will copy from the website and will put in the head of our html file
 
-    this.#map = L.map("map").setView(coords, 13); //we change var with const const  and     [51.505, -0.09] with coords   and also 13 is like zoomin and zoom out we will change it and we will inspect on the map
+    this.#map = L.map("map").setView(coords, this.#zoom); //we change var with const const  and     [51.505, -0.09] with coords   and also 13 is like zoomin and zoom out we will change it and we will inspect on the map
 
     L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
       attribution:
@@ -294,6 +305,26 @@ class App {
 </li>`;
 
     form.insertAdjacentHTML("afterend", html);
+  }
+
+  //when we click  at the workout then we get the map zoomed to the diserd location
+  _popeUpMove(e) {
+    const workoutEl = e.target.closest(".workout");
+    console.log(workoutEl);
+    if (!workoutEl) return;
+
+    const workout = this.#workouts.find(
+      (work) => work.id == workoutEl.dataset.id
+    );
+    console.log(workout);
+
+    this.#map.setView(workout.coords, this.#zoom, {
+      animate: true,
+      pan: {
+        duration: 1,
+      },
+    });
+    workout.click();
   }
 }
 
