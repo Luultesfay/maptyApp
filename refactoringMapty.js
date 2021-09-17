@@ -237,7 +237,7 @@ class App {
         })
       )
       .setPopupContent(
-        `${workout.type === "running" ? "🏃‍♂️" : "🚴"}   ${workout.description}`
+        `${workout.type === "running" ? "🏃‍♂️" : "🚴"}${workout.description}`
       ) //this method is from lieflet
       .openPopup();
 
