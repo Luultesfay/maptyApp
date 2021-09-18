@@ -7,7 +7,7 @@
 
 ///////Managing workout Data: Creating Classes
 
-class workout {
+class Workout {
   date = new Date();
   id = (Date.now() + " ").slice(-10);
   clicks = 0;
@@ -32,7 +32,7 @@ class workout {
 }
 
 //create class running  and inherit from parent class workout
-class Running extends workout {
+class Running extends Workout {
   type = "running";
   constructor(coords, distance, duration, Cadence) {
     super(coords, distance, duration);
@@ -50,7 +50,7 @@ class Running extends workout {
 }
 
 //create class Cycling and inherit from parent class workout
-class Cycling extends workout {
+class Cycling extends Workout {
   type = "cycling";
   constructor(coords, distance, duration, elevationGain) {
     super(coords, distance, duration);
@@ -90,12 +90,18 @@ class App {
   #workouts = [];
   #zoom = 13;
   constructor() {
+    //get postion
     this._getPosition();
 
+    //get local storage
+    this._getLocalStorage();
+
+    /////attache event handlers
     //then we will sumbmit the form
 
     form.addEventListener("submit", this._newWorkOut.bind(this));
-    //this willchange element in  the input  when one is displayed the other one hidden  in tis case the  cycling(cadance) and runing (elevetion gain)interchanching
+
+    //this will change element in  the input  when one is displayed the other one hidden  in tis case the  cycling(cadance) and runing (elevetion gain)interchanching
     inputType.addEventListener("change", this._toggleElevationField);
 
     //. Move  map to Marker On Click
@@ -148,6 +154,9 @@ class App {
 
     //we rendered(displayed) the form  when we click the map
     this.#map.on("click", this._showForm.bind(this));
+
+    //this display the marker workout  to the map
+    this.#workouts.forEach((work) => this._renderWorkOutMarker(work));
   }
 
   _showForm(mapE) {
@@ -168,8 +177,6 @@ class App {
     form.classList.add("hidden");
     setTimeout(() => (form.style.display = "grid"), 1000);
   }
-
-  _getLocalStorage() {}
 
   _toggleElevationField() {
     inputElevation.closest(".form__row").classList.toggle("form__row--hidden");
@@ -229,13 +236,24 @@ class App {
     this.#workouts.push(workout);
 
     //console.log(workout);
+    this._renderWorkOutMarker(workout);
 
+    //rendering(display) work out here
+    this._renderWorkOut(workout);
+
+    //clear input field
+    this.hideForm();
+
+    //storing the workouts
+    this._setLocalStorage();
+  }
+  _renderWorkOutMarker(workout) {
     //by using this we display all markers that we click
 
     //console.log(mapEvent); //we will get the cliked event in that particular location
     //const { lat, lng } = this.#mapEvent.latlng; //we destracturing      lat and lang  stands for latitude and longutude
     //L.marker([lat, lng])renderWorkOutMarker(workout) {.addTo(map).bindPopup("working out").openPopup(); //working out is displays with the marker
-    L.marker([lat, lng]) //
+    L.marker(workout.coords) //
       .addTo(this.#map) //map and mapEvent   are out of scope  we need to make the  global variable  to access every where
       .bindPopup(
         L.popup({
@@ -244,20 +262,15 @@ class App {
           minWidth: 100,
           autoClose: false,
           closeOnClick: false,
-          className: "running-popup",
+          className: `${workout.type}-popup`,
         })
       )
       .setPopupContent(
         `${workout.type === "running" ? "🏃‍♂️" : "🚴"}${workout.description}`
       ) //this method is from lieflet
       .openPopup();
-
-    //rendering(display) work out here
-    this._renderWorkOut(workout);
-
-    //clear input field
-    this.hideForm();
   }
+
   _renderWorkOut(workout) {
     let html = `<li class="workout workout--${workout.type}" data-id="${
       workout.id
@@ -307,7 +320,7 @@ class App {
     form.insertAdjacentHTML("afterend", html);
   }
 
-  //when we click  at the workout then we get the map zoomed to the diserd location
+  //when we click  at the workout then we get the map zoomed to the desiered  location
   _popeUpMove(e) {
     const workoutEl = e.target.closest(".workout");
     console.log(workoutEl);
@@ -325,6 +338,22 @@ class App {
       },
     });
     workout.click();
+  }
+
+  _setLocalStorage() {
+    localStorage.setItem("workouts", JSON.stringify(this.#workouts)); //setItem(key: string, value: string): void      //stringify(this.#workouts)    changes objects or arrays to string
+  }
+
+  //this method  will (render)give us the stored  workout data  in the screen even if we refresh it
+  _getLocalStorage() {
+    const data = JSON.parse(localStorage.getItem("workouts")); //JSON.parse  will convert the string that stored in the local storage to  objects   //  like vise versa with the above    _setLocalStorage()  method
+    console.log(data); //this will give as data in objects becouse we changed the string to objects by  JSON.parse()
+
+    if (!data) return; //guard element       //if there is not data  return
+
+    this.#workouts = data;
+    // console.log(this.#workouts);//will give us the array of object that created
+    this.#workouts.forEach((work) => this._renderWorkOut(work));
   }
 }
 
