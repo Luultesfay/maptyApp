@@ -337,7 +337,7 @@ class App {
         duration: 1,
       },
     });
-    workout.click();
+    // workout.click();
   }
 
   _setLocalStorage() {
@@ -354,6 +354,11 @@ class App {
     this.#workouts = data;
     // console.log(this.#workouts);//will give us the array of object that created
     this.#workouts.forEach((work) => this._renderWorkOut(work));
+  }
+
+  reset() {
+    localStorage.removeItem("workouts");
+    location.reload();
   }
 }
 
