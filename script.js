@@ -101,3 +101,10 @@ inputType.addEventListener("change", function () {
   inputElevation.closest(".form__row").classList.toggle("form__row--hidden");
 });
 */
+///example of asyncreous  js
+console.log(`1.order food`);
+setTimeout(function () {
+  console.log(`thank you for watiing here is your food`);
+}, 2000);
+
+console.log("wait for your food it will arrive shortly ");
