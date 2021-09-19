@@ -68,8 +68,8 @@ class Cycling extends Workout {
 
 //lets create objects now
 
-//const run1 = new Running(10, 60, [37, 120], 178);
-//const cycling1 = new Cycling(30, 60, [37, 120], 178);
+//const run1 = new Running( [37, 120],10, 60,, 178);
+//const cycling1 = new Cycling( [37, 120],30, 60, 178);
 
 //console.log(run1); //Object { date: Date Sat Sep 11 2021 08:51:40 GMT-0700 (Pacific Daylight Time), id: "375500252 ", distance: 10, duration: 60, coords: (2) […], Cadence: 178, pace: 6 }
 //console.log(cycling1); //Object { date: Date Sat Sep 11 2021 08:52:15 GMT-0700 (Pacific Daylight Time), id: "375535436 ", distance: 30, duration: 60, coords: (2) […], elevationGain: 178, speed: 30 }
@@ -155,7 +155,7 @@ class App {
     //we rendered(displayed) the form  when we click the map
     this.#map.on("click", this._showForm.bind(this));
 
-    //this display the marker workout  to the map
+    //this display the marker workout  on the map
     this.#workouts.forEach((work) => this._renderWorkOutMarker(work));
   }
 
