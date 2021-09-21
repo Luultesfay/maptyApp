@@ -108,3 +108,21 @@ setTimeout(function () {
 }, 2000);
 
 console.log("wait for your food it will arrive shortly ");
+
+///palindrom
+
+const testPalendroom = function (str) {
+  let strSplitRiverseJoin = str.split("").reverse().join("");
+  console.log(strSplitRiverseJoin);
+
+  if (str === strSplitRiverseJoin) {
+    console.log(`${str} is palindrrom`);
+  } else {
+    console.log(`${str} is not palindrrom`);
+  }
+};
+
+testPalendroom("lulul");
+testPalendroom("luula");
+
+//fubonacci code   01 1 2 3 5 8 ...
